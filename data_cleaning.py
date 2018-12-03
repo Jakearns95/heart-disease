@@ -39,10 +39,11 @@ def get_clean_df(raw_path = '',
         LOGGER.info("Using cached version of cleaned HD data")
     else:
         # Load (and optionally clean) the local csv
-        header_row = ['age','sex','pain','BP','chol','fbs','ecg','maxhr','eiang','eist','slope','vessels','thal','diagnosis']
+        header_row = ['age','sex','pain','BP','chol','fbs','ecg','maxhr','exang','eist','slope','vessels','thal','diagnosis']
         
         #define dtypes for each column
-        df = pd.read_csv(raw_path, low_memory=False, encoding = 'latin-1', names = header_row, error_bad_lines = False)
+        df = pd.read_csv(raw_path, low_memory=False, encoding = 'latin-1', names = header_row,
+                         error_bad_lines = False, na_values=["?"])
                         
         if raw_only:
             LOGGER.debug("Loaded input HD df, with no additional cleaning.")
@@ -62,12 +63,12 @@ def clean_df(df):
     Converts columns to datetime, bool and category values."""
     ans = df.copy()
     
-    # replacing ? in all columns to null
-    for col in ['BP','chol','fbs','maxhr','eiang','eist','slope','vessels','thal']:
-        ans[col] = ans[col].str.replace('?', 'NaN')
+#     # replacing ? in all columns to null
+#     for col in ['BP','chol','fbs','maxhr','eiang','eist','slope','vessels','thal']:
+#         ans[col] = ans[col].str.replace('?', np.nan, regex=True).astype(float)
         
     #changing dtypes over to int64
-    for col in ['BP','chol','fbs','maxhr','eiang','eist','slope','vessels','thal']:
+    for col in ['BP','chol','fbs','maxhr','exang','eist','slope','vessels','thal']:
         ans[col] = ans[col].astype(float)
         
     
